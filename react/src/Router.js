@@ -2,13 +2,9 @@ import React from 'react';
 import {
     BrowserRouter,
     Switch,
-    Route,
-    Link,
-    Redirect,
-    useLocation,
+    Route
 } from "react-router-dom";
 import MainPage from './components/mainPage';
-
 
 const Router = (props) => {
     return (

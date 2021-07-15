@@ -17,6 +17,10 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    res.send("Hello Express!")
+})
+
 app.get('/users', (req, res) => {
     // connection.connect();
     const SQL = "SELECT * FROM user";

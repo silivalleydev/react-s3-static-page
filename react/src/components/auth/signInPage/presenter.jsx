@@ -13,6 +13,12 @@ const Presenter = (props) => {
         <div>
           <input />          
         </div>
+        <div>
+          <button>로그인</button>
+        </div>
+        <div>
+          <button>회원가입</button>
+        </div>
       </div>
     </div>
   );

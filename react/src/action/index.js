@@ -1,8 +1,8 @@
-export const MENU_CHANGE = "MENU_CHANGE";
+export const SET_MEMBER_TYPE = "SET_MEMBER_TYPE";
 
-export const menuChange = (data) => {
+export const setMemberType = (data) => {
     return {
-        type: MENU_CHANGE,
+        type: SET_MEMBER_TYPE,
         data
     }
 }

@@ -1,18 +1,18 @@
 
 import {combineReducers} from 'redux'
-import { MENU_CHANGE } from '../action';
+import { SET_MEMBER_TYPE } from '../action';
 
 const InitialState = {
-    isMenuChanged: false
+    memberType: ''
 }
 
 
 const reducer = (state = InitialState, action) => {
     switch(action.type){
-        case MENU_CHANGE:
+        case SET_MEMBER_TYPE:
             return{
                 ...state,
-                isMenuChanged: action.data,
+                memberType: action.data,
             }
         default:
             return state;

@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 
 const Presenter = (props) => {
 
-
   return (
     <>
-    <div>
+    <div style={{ backgroundColor: "lightgray" }}>
       <Link to="/signIn">로그인</Link>
     </div>
     </>

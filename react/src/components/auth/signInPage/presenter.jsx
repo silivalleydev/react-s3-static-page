@@ -14,10 +14,10 @@ const Presenter = (props) => {
           <input />          
         </div>
         <div>
-          <button>로그인</button>
+          <button>Sign In</button>
         </div>
         <div>
-          <button>회원가입</button>
+          <button>Sign Up</button>
         </div>
       </div>
     </div>

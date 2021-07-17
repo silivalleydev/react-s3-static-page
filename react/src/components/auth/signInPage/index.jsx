@@ -1,10 +1,10 @@
 import React from 'react';
 import Container from './container';
 
-const MainPage = (props) => {
+const SignInPage = (props) => {
     return (
         <Container {...props} />           
     )
 };
 
-export default MainPage;
+export default SignInPage;

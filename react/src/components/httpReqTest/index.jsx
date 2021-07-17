@@ -1,10 +1,10 @@
 import React from 'react';
 import Container from './container';
 
-const BoardCreate = (props) => {
+const HttpReqTest = (props) => {
     return (
         <Container {...props} />           
     )
 };
 
-export default BoardCreate;
+export default HttpReqTest;

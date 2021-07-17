@@ -4,7 +4,9 @@ import Router from './Router';
 const App = (props) => {
 
     return (
-        <Router/>
+        <>
+            <Router />
+        </>
     )
 };
 

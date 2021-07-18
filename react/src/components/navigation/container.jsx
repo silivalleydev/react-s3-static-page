@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Presenter from "./presenter";
 
 const Container = (props) => {
 
   const {
-      location = {}
+      location = {},
+      history = {}
   } = props;
+
+  useEffect(() => {
+  }, [location.pathname])
 
   return (
     <>

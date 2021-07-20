@@ -71,13 +71,13 @@ router.post("/signin", (req, res) => {
     if (dycrypted) {
       const splited = dycrypted.split(":");
       const email = splited[0];
-      const password = encryptionData(splited[1]);
+      const password = splited[1];
       const SQL = "SELECT * FROM member where email=?";
 
       connection.query(
         SQL,
         [email],
-        function (err, result, fields) {
+        function (err, result = [], fields) {
           if (err) {
             return res.status(400).json({
               status: "error",
@@ -85,9 +85,26 @@ router.post("/signin", (req, res) => {
             });
           } else {
             console.log("결과",result);
-            return res.status(200).json({
-              status: "success"
-            });
+            if (result.length > 0) {
+                const selectedRs = result[0] || {};
+
+                if (password === dycryptionData(selectedRs.password)) {
+                    return res.status(200).json({
+                        status: "success",
+                        access_token: "sdsdcfbew"
+                    });     
+                } else {
+                    return res.status(200).json({
+                        status: "success",
+                        message: "incorrect email or password"
+                    });
+                }
+            } else {
+                return res.status(200).json({
+                  status: "success",
+                  message: "incorrect email or password"
+                });
+            }
           }
         }
       );
@@ -97,30 +114,6 @@ router.post("/signin", (req, res) => {
           status: 'error',
           error: 'req body cannot be empty',
     }); 
-  }
-  
-  console.log("data", req.body);
-  const body = req.body || {};
-  if (body) {
-    const SQL = "SELECT * FROM user where id=?";
-    connection.query(SQL, [body.email], function (err, result, fields) {
-      if (err) {
-        return res.status(400).json({
-          status: "error",
-          error: "req body cannot be empty",
-        });
-      } else {
-        return res.status(200).json({
-          status: "succes",
-          data: req.body,
-        });
-      }
-    });
-  } else {
-    return res.status(400).json({
-      status: "error",
-      error: "req body cannot be empty",
-    });
   }
 });
 

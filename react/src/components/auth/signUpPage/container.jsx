@@ -1,18 +1,9 @@
 import axios from "axios";
 import React from "react";
+import { encryptionData } from "../../../common/function/commonFunction";
 import { API_SIGN_UP, HOST } from "../../../env";
 import Presenter from "./presenter";
-import CryptoJS from "crypto-js";
 
-const encryptionData = (email, password) => {
-  const secretKey = 'Basic';
-
-  console.log('original:', `${email}:${password}`);
-  const encrypted = CryptoJS.AES.encrypt(`${email}:${password}`, secretKey).toString();
-  console.log('encrypt:', encrypted);
-
-  return encrypted;
-}
 
 const Container = (props) => {
 

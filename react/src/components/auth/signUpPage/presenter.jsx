@@ -26,7 +26,7 @@ const Presenter = (props) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button onClick={handleSignUp}>회원가입</button>
+      <button onClick={handleSignUp}>Sign up</button>
     </div>
   );
 };

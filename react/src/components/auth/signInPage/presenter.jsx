@@ -1,6 +1,11 @@
 import React from "react";
 
 const Presenter = (props) => {
+
+  const {
+    history
+  } = props;
+
   return (
     <div>
       <div>
@@ -17,7 +22,7 @@ const Presenter = (props) => {
           <button>Sign In</button>
         </div>
         <div>
-          <button>Sign Up</button>
+          <button onClick={() => history.push("/signUp")}>Sign Up</button>
         </div>
       </div>
     </div>

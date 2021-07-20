@@ -6,7 +6,8 @@ const Presenter = (props) => {
   return (
     <>
     <div style={{ backgroundColor: "lightgray" }}>
-      <Link to="/signIn">로그인</Link>
+      <Link to="/signIn">Sign in</Link>
+      <Link to="/signUp">Sign up</Link>
     </div>
     </>
   );

@@ -1,27 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const connection = require("../connection");
-const CryptoJS = require("crypto-js");
+const { dycryptionData, encryptionData, generateAccessToken, generateRefreshToken } = require("../util/utilFunction");
 
-const encryptionData = (data) => {
-  const secretKey = "Basic";
 
-  // encrypt
-  const encrypted = CryptoJS.AES.encrypt(`${data}`, secretKey).toString();
-  console.log("encrypt:", encrypted);
 
-  return encrypted;
-};
-
-const dycryptionData = (encrypted) => {
-  const secretKey = "Basic";
-
-  const bytes = CryptoJS.AES.decrypt(`${encrypted}`, secretKey);
-  const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-  console.log("decrypted:", decrypted);
-
-  return decrypted;
-};
 
 router.post("/signup", (req, res) => {
   console.log("data", req.headers.authorization);
@@ -89,9 +72,13 @@ router.post("/signin", (req, res) => {
                 const selectedRs = result[0] || {};
 
                 if (password === dycryptionData(selectedRs.password)) {
+                      const accessToken = generateAccessToken(email);
+                      const refreshToken = generateRefreshToken(email);
+
                     return res.status(200).json({
                         status: "success",
-                        access_token: "sdsdcfbew"
+                        accessToken,
+                        refreshToken
                     });     
                 } else {
                     return res.status(200).json({
@@ -115,6 +102,50 @@ router.post("/signin", (req, res) => {
           error: 'req body cannot be empty',
     }); 
   }
+});
+
+const authenticateAccessToken = (req, res, next) => {
+    let authHeader = req.headers["authorization"];
+    let token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        console.log("wrong token format or token is not sended");
+        return res.sendStatus(400);
+    }
+
+    jwt.verify(token, ACCESS_TOKEN_SECRET, (error, user) => {
+        if (error) {
+            console.log(error);
+            return res.sendStatus(403);
+        }
+        
+        req.user = user;
+        next();
+    });
+};
+
+// access token을 refresh token 기반으로 재발급
+router.post("/refresh", (req, res) => {
+    let refreshToken = req.body.refreshToken;
+    if (!refreshToken) return res.sendStatus(401);
+
+    jwt.verify(
+        refreshToken,
+        REFRESH_TOKEN_SECRET,
+        (error, user) => {
+            if (error) return res.sendStatus(403);
+
+            const accessToken = generateAccessToken(user.id);
+
+            res.json({ accessToken });
+        }
+    );
+});
+
+// access token 유효성 확인을 위한 예시 요청
+router.get("/user", authenticateAccessToken, (req, res) => {
+    console.log(req.user);
+    res.json(users.filter((user) => user.id === req.user.id));
 });
 
 module.exports = router;

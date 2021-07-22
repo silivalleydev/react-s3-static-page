@@ -39,7 +39,9 @@ module.exports = {
             jwt.verify(token, token_secret_type === "access" ? ACCESS_TOKEN_SECRET : token_secret_type === "refresh" ? REFRESH_TOKEN_SECRET : null, (error, user) => {
                 if (error) {
                     console.log("??", error)
-                    resolve("Fail");
+                    resolve({
+                        message: error
+                    });
                     return
                 }
                 console.log("??uer", user)

@@ -7,6 +7,10 @@ import Presenter from "./presenter";
 
 const Container = (props) => {
 
+  const {
+    history
+  } = props;
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -20,6 +24,7 @@ const Container = (props) => {
       });
 
       console.log(result);
+      history.push("/");
     } catch (error) {
       console.log("Sign Up Failed");
     }

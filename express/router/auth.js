@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const connection = require("../connection");
-const { dycryptionData, encryptionData, generateAccessToken, generateRefreshToken } = require("../util/utilFunction");
-
-
-
+const { dycryptionData, encryptionData, generateAccessToken, generateRefreshToken, verifyAccessToken } = require("../util/utilFunction");
 
 router.post("/signup", (req, res) => {
   console.log("data", req.headers.authorization);
@@ -104,48 +101,55 @@ router.post("/signin", (req, res) => {
   }
 });
 
-const authenticateAccessToken = (req, res, next) => {
-    let authHeader = req.headers["authorization"];
-    let token = authHeader && authHeader.split(" ")[1];
+// access token을 refresh token 기반으로 재발급
+router.post("/refresh", async (req, res) => {
+    let authHeader = req.headers.authorization;
+    let refreshToken = authHeader && authHeader.split(" ")[1];
+    if (!refreshToken) {
+        console.log("wrong token format or token is not sended");
+        return res.sendStatus(400);
+    }
 
+    const verifyResult = await verifyAccessToken(refreshToken, "refresh");
+    if (verifyResult.id) {
+      const accessToken = generateAccessToken(verifyResult.id);
+      res.json({
+        statusCode: "200",
+        status: "success",
+        accessToken
+      });
+    } else {
+      res.json({
+        statusCode: "403",
+        status: "fail"
+      });
+    }
+});
+
+// access token 유효성 확인을 위한 예시 요청
+router.get("/verify",async (req, res) => {
+
+    let authHeader = req.headers.authorization;
+    let token = authHeader && authHeader.split(" ")[1];
+      console.log(authHeader)
     if (!token) {
         console.log("wrong token format or token is not sended");
         return res.sendStatus(400);
     }
 
-    jwt.verify(token, ACCESS_TOKEN_SECRET, (error, user) => {
-        if (error) {
-            console.log(error);
-            return res.sendStatus(403);
-        }
-        
-        req.user = user;
-        next();
-    });
-};
-
-// access token을 refresh token 기반으로 재발급
-router.post("/refresh", (req, res) => {
-    let refreshToken = req.body.refreshToken;
-    if (!refreshToken) return res.sendStatus(401);
-
-    jwt.verify(
-        refreshToken,
-        REFRESH_TOKEN_SECRET,
-        (error, user) => {
-            if (error) return res.sendStatus(403);
-
-            const accessToken = generateAccessToken(user.id);
-
-            res.json({ accessToken });
-        }
-    );
-});
-
-// access token 유효성 확인을 위한 예시 요청
-router.get("/user", authenticateAccessToken, (req, res) => {
-    console.log(req.user);
-    res.json(users.filter((user) => user.id === req.user.id));
+    const verifyResult = await verifyAccessToken(token, "access");
+    if (verifyResult.id) {
+      res.json({
+        statusCode: "200",
+        status: "success"
+      });
+    } else {
+      res.json({
+        statusCode: "403",
+        status: "fail"
+      });
+    }
+    console.log("결과????", verifyResult.id);
 });
 
 module.exports = router;

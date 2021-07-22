@@ -5,6 +5,11 @@ import { API_SIGN_IN, HOST } from "../../../env";
 import Presenter from "./presenter";
 
 const Container = (props) => {
+
+  const {
+    history
+  } = props;
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -16,8 +21,12 @@ const Container = (props) => {
           "Authorization": `Basic ${encrypted}`
         }
       });
-
       console.log(result);
+      if (result.data.accessToken) {
+        localStorage.setItem("access_token", result.data.accessToken);
+        localStorage.setItem("refresh_token", result.data.refreshToken);
+      }
+    history.push("/");
     } catch (error) {
       console.log("Sign In Failed");
     }

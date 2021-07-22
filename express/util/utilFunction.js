@@ -9,10 +9,6 @@ module.exports = {
         return jwt.sign({ id }, ACCESS_TOKEN_SECRET, {
             expiresIn: "15m",
         })
-        // generateRefreshToken: (id) => {
-        // return jwt.sign({ id }, REFRESH_TOKEN_SECRET, {
-        //     expiresIn: "180 days",
-        // })
     },
     generateRefreshToken: (id) => {
     return jwt.sign({ id }, REFRESH_TOKEN_SECRET, {
@@ -36,5 +32,22 @@ module.exports = {
     console.log("decrypted:", decrypted);
 
     return decrypted;
-    }
+    },
+    verifyAccessToken:  (token, token_secret_type) => {
+        return new Promise((resolve, reject) => {
+            console.log("실행")
+            jwt.verify(token, token_secret_type === "access" ? ACCESS_TOKEN_SECRET : token_secret_type === "refresh" ? REFRESH_TOKEN_SECRET : null, (error, user) => {
+                if (error) {
+                    console.log("??", error)
+                    resolve("res.sendStatus(403)");
+                    return
+                }
+                console.log("??uer", user)
+                resolve(user);
+            });
+        });
+    },
+    
 }
+
+

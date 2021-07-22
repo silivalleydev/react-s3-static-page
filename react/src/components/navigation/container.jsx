@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { verifyAccessToken } from "../../common/function/commonFunction";
 import Presenter from "./presenter";
 
 const Container = (props) => {
@@ -9,6 +10,7 @@ const Container = (props) => {
   } = props;
 
   useEffect(() => {
+    verifyAccessToken();
   }, [location.pathname])
 
   return (

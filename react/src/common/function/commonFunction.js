@@ -27,7 +27,7 @@ const verifyRefreshToken = async () => {
       return false;
     }
   } catch (error) {
-    console.log("VERITY TOKEN Failed");
+    console.log("VERITY REFRESH TOKEN Failed");
     return false;
   }
 

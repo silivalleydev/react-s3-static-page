@@ -1,7 +1,8 @@
 const express = require('express')
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const authRouter = require('./router/auth');
+// const authRouter = require('./router/auth');
+const exportRouter = require('./router/export');
 const app = express()
 const port = 8080
 
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authRouter);
+app.use('/export', exportRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

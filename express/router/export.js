@@ -3,7 +3,7 @@ const router = express.Router();
 const excel = require("exceljs");
 const transporter = require("../emailTransporterConnect.js");
 
-const exportExcel = async ({columns = [], rows = [], filename = ""}) => {
+const exportExcel = async ({columns = [], rows = [], filename = "", emailto = "", title = "", content = ""}) => {
   const exportname = `${filename}.xlsx`;
   console.log("이름/??", exportname)
     let workbook = new excel.Workbook();
@@ -12,10 +12,10 @@ const exportExcel = async ({columns = [], rows = [], filename = ""}) => {
     worksheet.addRows(rows);
     const buffer = await workbook.xlsx.writeBuffer();
     const mailOptions = {
-            from: 'wisemk79@gmailc.com',
-            to: ['steve@diilabs.co.kr'],
-            subject: 'subject',
-            html: 'content',
+            from: 'steve@gmail.com',
+            to: emailto,
+            subject: title,
+            html: content,
             attachments: [
                 {
                     filename,

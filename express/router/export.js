@@ -13,7 +13,7 @@ const exportExcel = async ({columns = [], rows = [], filename = "", emailto = ""
     worksheet.addRows(rows);
     const buffer = await workbook.xlsx.writeBuffer();
     const mailOptions = {
-            from: 'steve@gmail.com',
+            from: 'demo@gmail.com',
             to: emailto,
             subject: title,
             html: content,

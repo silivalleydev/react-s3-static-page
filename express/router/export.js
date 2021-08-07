@@ -1,65 +1,46 @@
 const express = require("express");
 const router = express.Router();
 const excel = require("exceljs");
+const transporter = require("../emailTransporterConnect.js");
 
-router.get("/excel", (req, res) => {
-  let workbook = new excel.Workbook();
-let worksheet = workbook.addWorksheet("Tutorials");
-
-const columns = [
-  { header: "id", key: "id", width: 5 },
-  { header: "title", key: "title", width: 25 },
-  { header: "description", key: "description", width: 25 },
-  { header: "published", key: "published", width: 10 },
-];
-
-const rows = [
-  {
-    id: 1,
-    title: "hello",
-    description: "what",
-    published: "blah"
-  },
-  {
-    id: 2,
-    title: "hello",
-    description: "what",
-    published: "blah"
-  },
-  {
-    id: 3,
-    title: "hello",
-    description: "what",
-    published: "blah"
-  },
-  {
-    id: 4,
-    title: "hello",
-    description: "what",
-    published: "blah"
-  },
-]
+const exportExcel = async ({columns = [], rows = [], filename = ""}) => {
+  const exportname = `${filename}.xlsx`;
+  console.log("이름/??", exportname)
+    let workbook = new excel.Workbook();
+    let worksheet = workbook.addWorksheet(exportname);
+    worksheet.columns = columns;
+    worksheet.addRows(rows);
+    const buffer = await workbook.xlsx.writeBuffer();
+    const mailOptions = {
+            from: 'wisemk79@gmailc.com',
+            to: ['steve@diilabs.co.kr'],
+            subject: 'subject',
+            html: 'content',
+            attachments: [
+                {
+                    filename,
+                    content: buffer,
+                    contentType:
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                },
+            ],
+        };
+        await transporter.sendMail(mailOptions);
+    };
 
 
-worksheet.columns = columns;
+router.post("/excel", (req, res) => {
 
-// Add Array Rows
-worksheet.addRows(rows);
+  console.log(req.body.name);
 
-// res is a Stream object
-res.setHeader(
-  "Content-Type",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-);
-res.setHeader(
-  "Content-Disposition",
-  "attachment; filename=" + "tutorials.xlsx"
-);
+  const exportConfig = {
+    columns: req.body.columns || [],
+    rows: req.body.rows || [],
+    filename: req.body.filename || "excelData"
+  }
 
-return workbook.xlsx.write(res).then(function () {
-  res.status(200).end();
-});
-  // res.send("Export Excel")
+  exportExcel(exportConfig);
+  res.send("Export Excel")
 });
 
 

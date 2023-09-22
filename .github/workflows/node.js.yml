@@ -23,10 +23,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Npm install
-        run: cd ./react && npm install
+        run: npm install
 
       - name: Build
-        run: cd ./react && npm run build
+        run: npm run build
 
       - name: Transfer to S3 First Bucket for serving static
         uses: jakejarvis/s3-sync-action@master

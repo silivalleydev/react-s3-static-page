@@ -47,8 +47,48 @@
 
 ### AWS Certificate Manager (ACM)에서 SSL/TLS 인증서 발급
 
-1. ACM 콘솔로 이동
-2. "인증서 생성" 버튼을 클릭
+1. ACM(Certificate Manager) 콘솔로 이동
+2. 사이드바에서 "인증서 요청" 버튼을 클릭
+3. 퍼블릭 인증서 요청 선택 후 다음 클릭
+4. 완전히 정규화된 도메인 이름은 (www.abd.com)인 경우 *.abc.com해서 서브도메인도 연결될 수 있도록한다.
+5. DNS 검증을 선택하고 요청을 누른다.
+6. 생성된 요청 링크 들어가서 `Route 53에서 레코드 생성` 을 클릭하고 레코드 생성을 클릭한다.
+7. 검증시간은 30분 정도 소요된다.
+8. 발급되면 CloudFront로 이동하고 Distributions를 클릭하고 Create distribution를 클릭한다.
+9. `Origin domain`을 Amazon S3 리스트중 내 도메인에 맞는 정적 웹사이트 주소를 선택한 후 `Default root object - optional` 를 `index.html`로 설정한다.
+10. `Viewer protocol policy`를 `Redirect HTTP to HTTPS`로 선택하고 `Allowed HTTP methods`를 `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`로 선택한다음 `OPTIONS`를 체크한다.
+11. `Web Application Firewall (WAF)`를 `Do not enable security protections`로 선택한다.
+12. `Custom SSL certificate - optional`를 아까 발급한 인증서를 선택하고 `Create distribution`를 누른다.
+13. `CloudFront - Security - Origin access - Identities (legacy)탭` 메뉴에 접근 후, `Create origin access identity` 버튼을 클릭해서 `Name`을 도메인 이름으로 생성한다.
+14. 생성된 Origin access identities ID를 복사한다.
+15. 해당 S3의 Bucket Policy에서 아래와 같이 내용 추가를한다.
+```
+{
+    "Version": "2012-10-17",
+    "Id": "PolicyForCloudFrontPrivateContent",
+    "Statement": [
+        {
+            "Sid": "Allow-OAI-Access-To-Bucket",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity [아까복사한Origin access identities ID]"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::버킷명/*"
+        },
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::버킷명/*"
+        }
+    ]
+}
+```
+16. CloudFront - Distributions - 아까 생성한 클라우드 프론트 ID를 누른 후 Settings의 Edit을 누르고 Alternate domain name (CNAME) - optional에 `*.abc.com`, `www.abc.com` 두개를 추가하고 Last modified Deploying 이 끝날때까지 기다린다.
+17. Route53에서 도메인 클릭 후 www.woocobang.com으로 A레코드 AAAA레코드 두개를 CloudFront로 연결하여 생성한다.
+
 3. 인증서를 요청하는 페이지에서 도메인 이름을 입력하고 "다음"을 클릭
 4. 인증서 유형을 선택합니다. 가장 일반적으로는 "공인 인증서"를 선택
 5. 인증서를 검증하는 방법을 선택하고 "다음"을 클릭한다. DNS 검증을 선택하면 DNS 레코드를 통해 도메인 소유권을 확인

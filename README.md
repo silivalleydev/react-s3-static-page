@@ -87,25 +87,4 @@
 }
 ```
 16. CloudFront - Distributions - 아까 생성한 클라우드 프론트 ID를 누른 후 Settings의 Edit을 누르고 Alternate domain name (CNAME) - optional에 `*.abc.com`, `www.abc.com` 두개를 추가하고 Last modified Deploying 이 끝날때까지 기다린다.
-17. Route53에서 도메인 클릭 후 www.woocobang.com으로 A레코드 AAAA레코드 두개를 CloudFront로 연결하여 생성한다.
-
-3. 인증서를 요청하는 페이지에서 도메인 이름을 입력하고 "다음"을 클릭
-4. 인증서 유형을 선택합니다. 가장 일반적으로는 "공인 인증서"를 선택
-5. 인증서를 검증하는 방법을 선택하고 "다음"을 클릭한다. DNS 검증을 선택하면 DNS 레코드를 통해 도메인 소유권을 확인
-6. 리뷰 페이지에서 요청을 검토하고 "인증서 생성"을 클릭
-7. ACM은 도메인 소유권을 확인하고 SSL/TLS 인증서를 발급합니다. 이 과정은 몇 분 정도 소요됨
-
-### SSL/TLS 인증서를 로드 밸런서 또는 CloudFront에 연결
-
-1. 원하는 AWS 서비스(로드 밸런서, CloudFront 등)에서 SSL/TLS 인증서를 사용하도록 설정
-2. 인증서 연결
-    - AWS Load Balancer 사용 시: Load Balancer 구성에서 SSL/TLS 인증서를 연결하고, 리스너 설정에서 HTTPS를 활성화
-    - AWS CloudFront 사용 시: CloudFront 배포 설정에서 "대체 도메인 이름(CNAME)"을 구성하고, "SSL 인증서"를 선택하여 ACM에서 생성한 인증서를 연결합니다.
-
-### Route 53에서 DNS 레코드 설정
-
-1. Route 53 콘솔로 이동
-2. 해당 호스팅 영역(도메인)을 선택하고, 관리하려는 레코드 세트를 편집
-3. 레코드 세트 유형을 "A 레코드 - IPv4 주소" 또는 "CNAME 레코드 - 별칭"으로 선택
-4. "라우팅 방법"을 "간단한 라우팅"으로 설정하고, 연결하려는 AWS 서비스(로드 밸런서 또는 CloudFront)의 DNS 이름을 선택
-5. 변경 사항을 저장
+17. Route53에서 도메인 클릭 후 `www.woocobang.com`으로 `A레코드`, `AAAA레코드` 두개를 CloudFront로 연결하여 생성한다.

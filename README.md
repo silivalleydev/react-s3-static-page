@@ -11,6 +11,13 @@
 6. 값을 입력한 후에는 "Add secret" 또는 "Create secret" 버튼을 클릭하여 비밀 값을 저장
 
 ### S3 버킷 설정
+1. 버킷 생성 시 **S3 버킷은 생성할 도메인명과 일치해야한다.**(www.abc.com이 도메인명이면 버킷 이름도 www.abc.com)
+2. ACLs enabled 로 선택한다.
+3. Block all public access 체크를 해제하고 I acknowledge that the current settings might result in this bucket and the objects within becoming public. 을 체크한 후 생성한다.
+4. 속성에가서 정적 웹 호스팅 생성을 클릭한 후 html 설정을 error하고 index 모두다 index.html로 설정한다.
+
+
+### S3 버킷 설정
 1. s3 버킷애 권한 탭에서 버킷 정책을 아래와 같이 설정한다.
 ```
 {
@@ -27,6 +34,7 @@
 }
 ```
 
+
 2. 속성 탭에서 스크롤 맨 밑으로 내리면 보이는 정적 웹 사이트 호스팅 설정을 해준다. 이때,인덱스 문서, 오류 문서 모두 index.html로 설정한다.
 
 
@@ -34,6 +42,8 @@
 1. Route53으로 이동 후 도메인 등록을 클릭한다.
 2. 도메인 가용성 확인 후 선택을 클릭하고 결제를 진행한다.
 3. Route53 사이드바에서 도메인 -> 요청 페이지에가서 요청한 도메인 상태가 완료될때까지 기다린다.
+4. 호스트 존 -> 생성된 도메인 링크를 클릭 -> 레코드 생성을 누른다.
+5. Alias를 활성화한 후 라우트 트래픽 대상을 `Alias to S3 website endpoint`로 선택한 뒤 `버킷 리전`에 맞는 리전을 선택한 후 정적 웹호스팅한 버킷 명을 선택하고 레코드 생성을 클릭한다.
 
 ### AWS Certificate Manager (ACM)에서 SSL/TLS 인증서 발급
 
